@@ -23,14 +23,4 @@ class UrlCreationTest extends TestCase
             $this->response->getContent()
         );
     }
-
-    // public function testCreateSlug()
-    // {
-    //     $this->post('/' . $this->faker->url());
-    //     $data = Url::factory('App\Url')->make();
-    //     $this->post('/' . $data->url);
-    //     dump($this->response->getContent());
-
-    //     dd($this->response->getContent());
-    // }
 }
