@@ -76,13 +76,23 @@ class Url extends Model
     {
         $instance = self::getUrlFromSlug($slug);
 
+        //Slug not found or expired
         if (!$instance) {
             return new UrlResult(null, 404, 'Not found');
         }
 
+        //Register a "click" into the shortened URL
         $instance->clicks()->create(['ip' => $ip]);
 
-        return new UrlResult('http://' . $instance->url);
+        // If the "Renovate on Access" option is on, every access
+        // refreshes the URL expiration time
+        if (env('RENOVATE_ON_ACCESS')) {
+            $instance->update([
+                'valid' => Carbon::now()->addDays(env('URL_VALID_DAYS'))
+            ]);
+        }
+
+        return new UrlResult('http://' . str_replace(['http://', 'https://'], '', $instance->url));
     }
 
     /**
