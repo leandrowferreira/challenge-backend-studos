@@ -23,4 +23,20 @@ class UrlCreationTest extends TestCase
             $this->response->getContent()
         );
     }
+
+    public function testReturnBasicUrlFromSlug()
+    {
+        $this->get('/abc123ab');
+
+        $this->assertStringContainsString('http://studos.com.br', $this->response->getContent());
+    }
+
+    public function testReturnNewUrlFromSlug()
+    {
+        $data = Url::factory()->create();
+
+        $this->get('/' . $data->slug);
+
+        $this->assertStringContainsString('http://' . $data->url, $this->response->getContent());
+    }
 }
