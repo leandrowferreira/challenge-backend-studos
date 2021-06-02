@@ -37,6 +37,25 @@ class Url extends Model
      */
     public static function createSlug($url, $baseUrl)
     {
+        // If the "Allow Multiple" option is off, we need
+        // to check if URL has an existing slug. If so,
+        // return this slug and don't create a new one.
+        if (!env('URL_ALLOW_MULTIPLE')) {
+            $checkUrl = self::getSlugFromUrl($url);
+
+            if ($checkUrl) {
+                return new UrlResult($baseUrl . $checkUrl->slug);
+            }
+        }
+
+        // If the "Check Before" option is on, we will
+        // check if a call to the given URL will return
+        // an error. If so, the result is HTTP "Unprocessable Entity"
+        if (env('URL_CHECK_BEFORE') && !self::isValidUrl($url)) {
+            return new UrlResult(null, 422, 'URL to shorten is invalid');
+        }
+
+        // Create and return the new slug
         $url = self::create([
             'slug'  => self::createNewSlug(),
             'url'   => $url,
@@ -94,6 +113,24 @@ class Url extends Model
     }
 
     /**
+     * Checks for URL. If so, return your slug.
+     * @param  string  $url  The given url
+     * @return App\Models\Url|null
+     */
+    protected static function getSlugFromUrl($url)
+    {
+        $urls = self::where('url', $url)->latest()->get();
+
+        foreach ($urls as $optUrl) {
+            if (!$optUrl->expired()) {
+                return $optUrl;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Creates a slug not yet used.
      * @return string
      */
@@ -104,6 +141,21 @@ class Url extends Model
         } while (self::where('slug', $slug)->count());
 
         return $slug;
+    }
+
+    /**
+     * Checks whether given URL responds with informational (100) or successfull (200) code.
+     *
+     * @param  string $url  The URL to be checked
+     * @return bool
+     */
+    protected static function isValidUrl($url)
+    {
+        try {
+            return Http::get('http://' . str_replace(['http://', 'https://'], '', $url))->status() < 300;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
