@@ -14,13 +14,29 @@ class Url extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = ['slug', 'url', 'valid'];
+
+    /**
+     * Properties that need to be treated as date.
+     *
+     * @var array
+     */
     protected $dates    = ['valid'];
 
-    public static function createUrl($url, Request $request)
+    /**
+     * Creates slug from URL.
+     *
+     * @param  string  $url      The URL to shorten
+     * @param  string  $baseUrl  The base URL to generate full shortened path
+     * @return App\Resources\UrlResult
+     */
+    public static function createSlug($url, $baseUrl)
     {
-        $baseUrl = substr($request->url(), 0, strrpos($request->url(), '/') + 1);
-
         $url = self::create([
             'slug'  => self::createNewSlug(),
             'url'   => $url,
@@ -30,24 +46,40 @@ class Url extends Model
         return new UrlResult($baseUrl . $url->slug);
     }
 
-    public static function showUrl($slug, Request $request)
+    /**
+     * Returns URL from slug. If the slug doesn't exist, return a 404 UrlResult.
+     *
+     * @param  string  $slug  The slug to search
+     * @param  string  $ip    (optional) The caller IP to register the "click"
+     * @return App\Resources\UrlResult
+     */
+    public static function showUrl($slug, $ip = null)
     {
-        $url = self::getUrlFromSlug($slug);
+        $instance = self::getUrlFromSlug($slug);
 
-        if ($url) {
-            $url->clicks()->create(['ip' => $request->ip()]);
-
-            return new UrlResult('http://' . $url->url);
-        } else {
+        if (!$instance) {
             return new UrlResult(null, 404, 'Not found');
         }
+
+        $instance->clicks()->create(['ip' => $ip]);
+
+        return new UrlResult('http://' . $instance->url);
     }
 
+    /**
+     * Checks if the current instance has expired
+     * @return bool
+     */
     protected function expired()
     {
         return Carbon::now()->diffInSeconds($this->valid, false) < 0;
     }
 
+    /**
+     * Checks for slug. If so, return your URL.
+     * @param  string  $slug  The given slug
+     * @return App\Models\Url|null
+     */
     protected static function getUrlFromSlug($slug)
     {
         $urls = self::where('slug', $slug)->latest()->get();
@@ -61,6 +93,10 @@ class Url extends Model
         return null;
     }
 
+    /**
+     * Creates a slug not yet used.
+     * @return string
+     */
     protected static function createNewSlug()
     {
         do {
@@ -70,6 +106,9 @@ class Url extends Model
         return $slug;
     }
 
+    /**
+     * The "has many" relationship to URL clicks.
+     */
     public function clicks()
     {
         return $this->hasMany(Click::class);

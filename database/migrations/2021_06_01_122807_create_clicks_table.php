@@ -17,7 +17,7 @@ class CreateClicksTable extends Migration
             $table->id();
 
             $table->foreignId('url_id');
-            $table->ipAddress('ip');
+            $table->ipAddress('ip')->nullable();
 
             $table->timestamps();
 

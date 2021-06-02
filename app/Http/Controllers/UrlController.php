@@ -9,7 +9,9 @@ class UrlController extends Controller
 {
     public function create($url, Request $request)
     {
-        $res = Url::createUrl($url, $request);
+        $baseUrl = substr($request->url(), 0, strrpos($request->url(), '/') + 1);
+
+        $res = Url::createSlug($url, $baseUrl);
         if ($res->getCode() == 200) {
             return $res->getResult();
         }
@@ -19,7 +21,7 @@ class UrlController extends Controller
 
     public function show($slug, Request $request)
     {
-        $res = Url::showUrl($slug, $request);
+        $res = Url::showUrl($slug, $request->ip());
         if ($res->getCode() == 200) {
             return redirect($res->getResult());
         }
