@@ -10,5 +10,5 @@ Route::get('/', function () {
     ]);
 });
 
-Route::post('/{url}', 'UrlController@create');
+Route::post('[{url:.*}]', 'UrlController@create');
 Route::get('/{slug}', 'UrlController@show');

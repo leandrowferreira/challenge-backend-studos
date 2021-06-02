@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class UrlController extends Controller
 {
-    public function create($url, Request $request)
+    public function create($url)
     {
-        $baseUrl = substr($request->url(), 0, strrpos($request->url(), '/') + 1);
+        $baseUrl = env('APP_URL') . '/';
 
         $res = Url::createSlug($url, $baseUrl);
         if ($res->getCode() == 200) {
