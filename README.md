@@ -16,7 +16,7 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [URL_ALLOW_MULTIPLE](#url_allow_multiple)
     - [RENOVATE_ON_ACCESS](#renovate_on_access)
     - [URL_VALID_DAYS](#url_valid_days)
-  - [Detalhamento](#detalhamento-técnico)
+  - [Detalhamento técnico](#detalhamento-técnico)
     - [Ambiente](#ambiente)
     - [Framework](#framework)
     - [Banco de dados](#banco-de-dados)
@@ -241,6 +241,116 @@ A `PSR-4` é a base da organização das estruturas do **Lumen**, e é requerido
 A `PSR-12` assegura que códigos gerados por diversas pessoas tenham o mínimo necessário de consistência entre si. *IDEs* como o **Visual Studio Code** e ferramentas como o [**PHP-CS-FIXER**](https://github.com/FriendsOfPHP/PHP-CS-Fixer) ajudam bastante no cumprimento das exigências desta recomendação.
 
 
+### O *Model* `Url`
+
+O Model `Url` é a peça funcional mais importante da aplicação. Nele está concentrado todo o negócio, dada a pequena complexidade do projeto. Abaixo estão listados os seus métodos:
+
+----------
+
+#### createSlug()
+
+Cria uma URL encurtada a partir da URL original.
+
+```php
+public static createSlug(string $url, string $baseUrl) : UrlResult
+```
+
+  - **Visibilidade:** public
+  - **Parâmetros:**
+    - **$url** (string) A URL a encurtar
+    - **$baseUrl** (string) A base da URL para gerar o caminho completo da URL encurtada
+  - **Retorno:** UrlResult
+
+----------
+
+#### showUrl()
+
+Retorna uma URL a partir de seu * slug*.
+
+```php
+public static showUrl(string $slug[, string $ip = null ]) : UrlResult
+```
+
+  - **Visibilidade:** public
+  - **Parâmetros:**
+    - **$slug** (string) O slug da URL desejada
+    - **$ip** (string) Opcional. O endereço de IP do cliente
+  - **Retorno:** UrlResult
+
+----------
+
+#### createNewSlug()
+
+Cria uma *string* ainda não utilizada para ser usada como um *slug*.
+
+```php
+protected static createNewSlug() : string
+```
+
+  - **Visibilidade:** protected
+  - **Retorno:** string
+
+----------
+
+#### expired()
+
+Verifica se a instância atual do model `Url` está expirada.
+
+```php
+protected expired() : bool
+```
+
+  - **Visibilidade:** protected
+  - **Retorno:** bool
+
+----------
+
+#### getSlugFromUrl()
+
+Retorna o *slug* correspondente à URL. Se não existir, retorna `NULL`.
+
+```php
+protected static getSlugFromUrl(string $url) : Url|null
+```
+
+  - **Visibilidade:** protected
+  - **Parâmetros:**
+    - **$url** (string) A URL original
+  - **Retorno:** Url | null
+
+----------
+
+#### getUrlFromSlug()
+
+Retorna a Url correspontente ao *slug* correspondente à URL. Se não existir, retorna `NULL`.
+
+```php
+protected static getUrlFromSlug(string $slug) : Url|null
+```
+
+  - **Visibilidade:** protected
+  - **Parâmetros:**
+    - **$slug** (string) O *slug* da URL
+  - **Retorno:** Url | null
+
+----------
+
+#### isValidUrl()
+
+Verifica se a URL informada está publicada e respondendo.
+
+```php
+protected static isValidUrl(string $url) : bool
+```
+
+  - **Visibilidade:** protected
+  - **Parâmetros:**
+    - **$url** (string) A URL a ser verificada
+  - **Retorno:** bool
+
+----------
+
+
 ### Testes
 
 É preferível que os testes sejam executados dentro do contêiner, eliminando a necessidade de o host possuir as configurações necessárias para realizar esta atividade. Por essa razão, está presente o arquivo `test.sh` na raiz do projeto, que executa os testes (a partir do [**PHPUnit**](https://phpunit.de/)) dentro do contêiner **appslug**.
@@ -320,4 +430,4 @@ As limitações conhecidas do projeto são:
 
 ## Créditos
 
-Esta implementação foi fortemente baseada no framework **Lumen** e na infraestrutura **Docker**, mas todo o conteúdo da camada de desenvolvimento é original.
+Esta implementação foi fortemente baseada no *framework* **Lumen** e na infraestrutura **Docker**, mas todo o conteúdo da camada de desenvolvimento é original.
