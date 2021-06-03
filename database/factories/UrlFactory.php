@@ -24,7 +24,7 @@ class UrlFactory extends Factory
     {
         return [
             'slug'  => $this->faker->domainWord(), //ean8(),
-            'url'   => trim($this->faker->url()),
+            'url'   => str_replace(['http://', 'https://'], '', trim($this->faker->url())),
             'valid' => Carbon::now()->addMinutes(random_int(1, 100)),
         ];
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Url;
+use Carbon\Carbon;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
@@ -13,7 +14,7 @@ class UrlCreationTest extends TestCase
      *
      * @return void
      */
-    public function testApiIsOn()
+    public function testAppIsOn()
     {
         $this->get('/');
 
@@ -66,8 +67,7 @@ class UrlCreationTest extends TestCase
         config(['url.check_before' => 0]);
 
         $url = 'some.invalid.url.' . random_int(0, 10000) . '.absurd';
-
-        $res = $this->post('/' . $url);
+        $this->post('/' . $url);
 
         $this->assertResponseStatus(200);
     }
@@ -83,8 +83,7 @@ class UrlCreationTest extends TestCase
         config(['url.check_before' => 1]);
 
         $url = 'some.invalid.url.' . random_int(0, 99999) . '.absurd';
-
-        $res = $this->post('/' . $url);
+        $this->post('/' . $url);
 
         $this->assertResponseStatus(422);
     }
@@ -98,7 +97,7 @@ class UrlCreationTest extends TestCase
     public function testReturnSameSlug()
     {
         //Sample URL to be shortened
-        $url = 'test.same.slug.com.br';
+        $url = 'test.same.slug.' . random_int(0, 99999) . '.com.br';
 
         config([
             'url.check_before'   => 0,
@@ -155,7 +154,6 @@ class UrlCreationTest extends TestCase
     {
         config([
             'url.check_before'       => 0,
-            'url.allow_multiple'     => 0,
             'url.renovate_on_access' => 0,
         ]);
 
@@ -185,7 +183,6 @@ class UrlCreationTest extends TestCase
     {
         config([
             'url.check_before'       => 0,
-            'url.allow_multiple'     => 0,
             'url.renovate_on_access' => 1,
         ]);
 
@@ -202,5 +199,29 @@ class UrlCreationTest extends TestCase
         $date2 = Url::where('slug', $data->slug)->first()->valid;
 
         $this->assertNotEquals($date1->toString(), $date2->toString());
+    }
+
+    /**
+     * Test if an expired slug returns HTTP 404 error.
+     *
+     * @return void
+     */
+    public function testExpiredSlug()
+    {
+        config(['url.check_before' => 0]);
+
+        //Valid entry
+        $data = Url::factory()->create();
+
+        $this->get('/' . $data->slug);
+        $this->assertResponseStatus(302);
+
+        //Mocks an expired entry
+        $data->update([
+            'valid' => Carbon::now()->subSecond(),
+        ]);
+
+        $this->get('/' . $data->slug);
+        $this->assertResponseStatus(404);
     }
 }

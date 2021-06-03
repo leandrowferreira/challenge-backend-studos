@@ -1,6 +1,6 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
+    "name": "leandrowferreira/challenge-backend-studos",
+    "description": "Implementação de serviço de encurtar URL como aplicação de candidato a vaga de desenvolvedor na Studos.",
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",

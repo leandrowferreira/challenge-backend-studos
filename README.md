@@ -22,6 +22,16 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [Banco de dados](#banco-de-dados)
     - [PHP Standard Recommendations (PSRs)](#php-standard-recommendations-psrs)
     - [Testes](#testes)
+      - [testAppIsOn](#testappison)
+      - [testReturnBasicUrlFromSlug](#testreturnbasicurlfromslug)
+      - [testReturnNewUrlFromSlug](#testreturnnewurlfromslug)
+      - [testCreateNewSlug](#testcreatenewslug)
+      - [testDontCreateNewSlug](#testdontcreatenewslug)
+      - [testReturnSameSlug](#testreturnsameslug)
+      - [testReturnDifferentSlug](#testreturndifferentslug)
+      - [testNotChangingExpiration](#testnotchangingexpiration)
+      - [testChangingExpiration](#testchangingexpiration)
+      - [testExpiredSlug](#testexpiredslug)
   - [Limitações](#limitações)
   - [Recursos](#recursos)
   - [Créditos](#créditos)
@@ -238,7 +248,48 @@ Para executar os testes, é necessário estar no diretório do projeto e executa
 $ ./test.sh
 ```
 
-Vários testes estão disponíveis no diretório `tests` do projeto.
+Os seguintes testes estão presentes no diretório `tests/functional` e são realizados ao ser executado o comando acima:
+
+#### testAppIsOn
+
+Verifica se a chamada `GET` ao *endpoint* retorna as informações sobre a aplicação.
+
+#### testReturnBasicUrlFromSlug
+
+Verifica se uma URL encurtada predefinida no banco (`http://localhost:8080/abc123ab`) retorna a URL esperada (`studos.com.br`).
+
+#### testReturnNewUrlFromSlug
+
+Verifica se uma URL criada diretamente através da `factory` é acessível a partir de sua versão encurtada.
+
+#### testCreateNewSlug
+
+Testa a funcionalidade básica de criar uma URL encurtada a partir do `POST` de uma URL no sistema. Este teste espera que uma URL, mesmo que inválida, gere sua versão encurtada, pois a configuração `URL_CHECK_BEFORE` está desativada.
+
+#### testDontCreateNewSlug
+
+Repete o teste anterior, porém com a configuração `URL_CHECK_BEFORE` ativada. O teste espera que a versão encurtada não seja criada e um código `HTTP` `422` retorne, pois a URL fornecida para o teste é inválida.
+
+#### testReturnSameSlug
+
+Este teste verifica se várias solicitações de encurtamento de uma mesma URL retornam a mesma versão encurtada, caso a configuração `URL_ALLOW_MULTIPLE` esteja desativada.
+
+#### testReturnDifferentSlug
+
+Aqui, ao contrário do ocorrido no teste anterior, a opção `URL_ALLOW_MULTIPLE` está ativada e, portanto, é esperado que diferentes versões encurtadas sejam obtidas a partir de múltiplas chamadas usando uma mesma URL original.
+
+#### testNotChangingExpiration
+
+O teste espera que várias chamadas à mesma URL encurtada não alterem o seu prazo de validade, caso a opção `RENOVATE_ON_ACCESS` esteja desativada.
+
+#### testChangingExpiration
+
+Este teste complementa o anterior, ativando a opção `RENOVATE_ON_ACCESS` e checando se a data de validade da URL encurtada é modificada a cada acesso.
+
+#### testExpiredSlug
+
+Aqui, uma URL encurtada é gerada, testada (esperando obter o código `HTTP` `322`) e depois sua data de validade é alterada para "um segundo atrás". O teste de acesso é repetido, mas desta vez é esperado o código `HTTP` `404`.
+
 
 
 ## Limitações
