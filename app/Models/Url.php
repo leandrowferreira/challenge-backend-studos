@@ -5,7 +5,6 @@ namespace App\Models;
 use Exception;
 use Carbon\Carbon;
 use App\Resources\UrlResult;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -97,6 +96,7 @@ class Url extends Model
 
     /**
      * Checks if the current instance has expired
+     *
      * @return bool
      */
     protected function expired()
@@ -106,6 +106,7 @@ class Url extends Model
 
     /**
      * Checks for slug. If so, return your URL.
+     *
      * @param  string  $slug  The given slug
      * @return App\Models\Url|null
      */
@@ -124,6 +125,7 @@ class Url extends Model
 
     /**
      * Checks for URL. If so, return your slug.
+     *
      * @param  string  $url  The given url
      * @return App\Models\Url|null
      */
@@ -142,6 +144,7 @@ class Url extends Model
 
     /**
      * Creates a slug not yet used.
+     *
      * @return string
      */
     protected static function createNewSlug()
@@ -154,7 +157,7 @@ class Url extends Model
     }
 
     /**
-     * Checks whether given URL responds with informational (100) or successfull (200) code.
+     * Checks whether provided URL responds with informational (100) or successfull (200) code.
      *
      * @param  string $url  The URL to be checked
      * @return bool
@@ -170,6 +173,8 @@ class Url extends Model
 
     /**
      * The "has many" relationship to URL clicks.
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function clicks()
     {
