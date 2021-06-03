@@ -7,24 +7,24 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
   - [O Desafio](#o-desafio)
   - [Funcionalidades](#funcionalidades)
   - [Instalação](#instalação)
-    - [Problemas comuns na instalação](problemas-comuns-na-instalação)
-  - [Utilização](utilização)
-    - [Gerando uma URL encurtada](gerando-uma-url-encurtada)
-    - [Acessando uma URL a partir da sua versão encurtada](acessando-uma-url-a-partir-da-sua-versão-encurtada)
-  - [Configurações](configurações)
-    - [URL_CHECK_BEFORE](url_check_before)
-    - [URL_ALLOW_MULTIPLE](url_allow_multiple)
-    - [RENOVATE_ON_ACCESS](renovate_on_access)
-    - [URL_VALID_DAYS](url_valid_days)
-  - [Detalhamento](detalhamento-técnico)
-    - [Ambiente](ambiente)
-    - [Framework](framework)
-    - [Banco de dados](Banco-de-dados)
-    - [PHP Standard Recommendations (PSRs)](php-standard-recommendations-psrs)
-    - [Testes](testes)
-  - [Limitações](limitações)
-  - [Recursos](recursos)
-  - [Créditos](créditos)
+    - [Problemas comuns na instalação](#problemas-comuns-na-instalação)
+  - [Utilização](#utilização)
+    - [Gerando uma URL encurtada](#gerando-uma-url-encurtada)
+    - [Acessando uma URL a partir da sua versão encurtada](#acessando-uma-url-a-partir-da-sua-versão-encurtada)
+  - [Configurações](#configurações)
+    - [URL_CHECK_BEFORE](#url_check_before)
+    - [URL_ALLOW_MULTIPLE](#url_allow_multiple)
+    - [RENOVATE_ON_ACCESS](#renovate_on_access)
+    - [URL_VALID_DAYS](#url_valid_days)
+  - [Detalhamento](#detalhamento-técnico)
+    - [Ambiente](#ambiente)
+    - [Framework](#framework)
+    - [Banco de dados](#banco-de-dados)
+    - [PHP Standard Recommendations (PSRs)](#php-standard-recommendations-psrs)
+    - [Testes](#testes)
+  - [Limitações](#limitações)
+  - [Recursos](#recursos)
+  - [Créditos](#créditos)
 
 
 
@@ -73,7 +73,7 @@ Este procedimento poderá demorar alguns minutos na primeira vez. Ele será o re
 Após a conclusão da montagem, deve-se usar o **Docker Compose** para *levantar* o ambiente:
 
 ```bash
-$ docker-composer up -d
+$ docker-compose up -d
 ```
 A opção `-d` permite a sua execução como um *daemon*, ou seja, em segundo plano, evitando que a janela do terminal fique bloqueada enquanto o ambiente está em execução.
 
@@ -93,7 +93,7 @@ Este script é o responsável por quatro tarefas básicas:
 Neste momento, o ambiente já deve estar ativo e funcionando. Para encerrar o ambiente, é utilizado o comando a seguir:
 
 ```bash
-$ docker-composer down
+$ docker-compose down
 ```
 
 
@@ -111,7 +111,7 @@ $ sudo service apache2 stop
 $ sudo service nginx stop
 ```
 
-Algumas vezes, servidores embutidos utilizam a porta `8080`. São exemplos os servidores ativados pelo comando `php -S` ou pelo comando do laravel `php artisan serve`. Pode ser necessário se certificar se há algum destes servidores em execução na porta `8080`.
+Algumas vezes, servidores embutidos utilizam a porta `8080`. São exemplos os servidores ativados pelo comando `php -S` ou pelo comando do **Laravel** `php artisan serve`. Pode ser necessário se certificar se há algum destes servidores em execução na porta `8080`.
 
 #### 2. Alterar as portas usadas
 
@@ -121,7 +121,7 @@ As portas usadas nos serviços são definidas no arquivo `docker-compose.yml`. �
 
 O *endpoint* da aplicação é configurado por padrão para `http://localhost:8080/`.
 
-A aplicação possui duas funcionalidades: **geração de URL encurtada** e **acesso da URL**, de acordo com a tabela a seguir:
+A aplicação possui duas funcionalidades: **geração de URL encurtada** e **acesso à URL**, de acordo com a tabela a seguir:
 
 
 Método | URI           | Ação                 | Exemplo
@@ -152,28 +152,28 @@ A URL encurtada retornada a partir do item anterior pode ser inserida diretament
 
 O arquivo `.env` possui as configurações de todo o ambiente, dentre as quais a conexão com banco de dados, o ambiente (desenvolvimento ou produção) e quatro outras configurações referentes ao funcionamento da aplicação que merecem destaque:
 
-Configuração       | Valores | Descrição
--------------------|---------|-----------
-URL_CHECK_BEFORE   | 0 ou 1  | Determina o sistema deve verificar se a URL existe e está respondendo antes de encurtá-la
-URL_ALLOW_MULTIPLE | 0 ou 1  | Determina se múltiplas solicitações de encurtamento da mesma URL devem retornar resultados diferentes
-RENOVATE_ON_ACCESS | 0 ou 1  | Determina se o prazo de validade é renovado a cada acesso
-URL_VALID_DAYS     | 0 ou 1  | Determina o prazo de validade (em dias) de uma URL encurtada
+Configuração           | Valores | Descrição
+-----------------------|---------|-----------
+**URL_CHECK_BEFORE**   | 0 ou 1  | Determina o sistema deve verificar se a URL existe e está respondendo antes de encurtá-la
+**URL_ALLOW_MULTIPLE** | 0 ou 1  | Determina se múltiplas solicitações de encurtamento da mesma URL devem retornar resultados diferentes
+**RENOVATE_ON_ACCESS** | 0 ou 1  | Determina se o prazo de validade é renovado a cada acesso
+**URL_VALID_DAYS**     | 0 ou 1  | Determina o prazo de validade (em dias) de uma URL encurtada
 
 ### URL_CHECK_BEFORE
 
-Se esta opção estiver ativa (com valor `1`), uma chamada à URL original é feita pelo sistema antes do encurtamento. Se esta chamda responder um código `HTTP` maior ou igual a `300`, a URL é considerada inválida e o encurtamento não ocorre. No lugar dele, o sistema retornará um código `HTTP` `422` e a mensagem `URL to shorten is invalid`.
+Se esta opção estiver ativa (com valor `1`), uma chamada à URL original é feita pelo sistema antes do encurtamento. Se esta chamada retornar um código `HTTP` maior ou igual a `300`, a URL é considerada inválida e o encurtamento não ocorre. No lugar dele, o sistema retornará ao usuário um código `HTTP` `422` e a mensagem `URL to shorten is invalid`.
 
 Esta chamada pode aumentar o tempo de resposta do serviço, uma vez que dependerá do tempo de resposta da URL que está sendo consultada.
 
 ### URL_ALLOW_MULTIPLE
 
-Por padrão, se for solicitado o encurtamento de uma URL que já exista e esteja dentro do prazo de validade, a mesma URL encurtada retorna da chamada, mantendo a validade original caso a opção `RENOVATE_ON_ACCESS` esteja desativada.
+Por padrão, se for solicitado o encurtamento de uma URL que já exista e esteja dentro do prazo de validade, a mesma URL encurtada retorna da chamada, mantendo a validade original.
 
 Se a opção `URL_ALLOW_MULTIPLE` estiver ativa (com valor `1`), é criada uma nova URL encurtada. As URLs encurtadas criadas anteriormente a partir da mesma URL original permanecem funcionando pelo restante do seu prazo de validade.
 
 ### RENOVATE_ON_ACCESS
 
-Se esta opção estiver ativa (com valor `1`), a cada vez que a URL encurtada for acessada, o seu prazo de validade reinicia. Esta opção é útil caso a aplicação requeira a expiração da URLs encurtadas que não forem acessadas por um determinado período.
+Se esta opção estiver ativa (com valor `1`), a cada vez que a URL encurtada for acessada, o seu prazo de validade será reiniciado. Esta opção é útil caso a aplicação requeira a expiração da URLs encurtadas que não forem acessadas por um determinado período.
 
 ### URL_VALID_DAYS
 
@@ -198,13 +198,13 @@ A aplicação em si é muito simples, tendo todas as suas funcionalidades perfei
 
 Considerou-se que utilizar um *framework* completo (como o Laravel, Laminas, CakePHP ou Codeigniter, por exemplo) incluiria complexidade desnecessária ao ambiente. A completa ausência de *views* contribuiu para a decisão pelo **Lumen**, que simplesmente vai devolver requisições simples como texto ou redirecionamento.
 
-Foi necessário adicionar um módulo nativo no **Laravel**, porém ausente na instalação original do **Lumen**, o [**Guzzle**](https://docs.guzzlephp.org/en/stable), responsável pela requisição de checagem da URL original, caso a opção `URL_CHECK_BEFORE`. Além disso, optou-se por habilitar o [**Eloquent**](https://laravel.com/docs/master/eloquent), o *ORM* (Object Relational Mapping) do **Laravel**.
+Foi necessário adicionar um módulo nativo no **Laravel**, porém ausente na instalação original do **Lumen**, o [**Guzzle**](https://docs.guzzlephp.org/en/stable), responsável pela requisição de checagem da URL original, caso a opção `URL_CHECK_BEFORE` esteja ativa. Além disso, optou-se por habilitar o [**Eloquent**](https://laravel.com/docs/master/eloquent), o *ORM* (Object Relational Mapping) do **Laravel**.
 
 Algumas configurações foram removidas devido à ausência de funcionalidade no projeto, como por exemplo autenticação, eventos, *middlewares* e *listeners*. Uma especial atenção deve ser dispensada ao fato de as chamadas não serem autenticadas, por este requisito não estar presente na descrição original.
 
 ### Banco de dados
 
-Apenas duas tabelas são criadas no banco de dadosa partir das *migrations* presentes no diretório `database/migrations`:
+Apenas duas tabelas são criadas no banco de dados a partir das *migrations* presentes no diretório `database/migrations`:
 
 - **Urls** para armazenar as URLs originais, o seu *slug* e sua validade.
 - **Clicks** para armazenar dados a respeito dos acessos usando as URLs encurtadas. Estes dados incluem data/hora do acesso e IP do usuário.
@@ -219,7 +219,7 @@ O desenvolvimento desta aplicação foi realizado procurando se manter fiel às 
 
 - **Padrões de código** governa detalhes de formatação do arquivo, efeitos colaterais, namespaces, classes, propriedades e métodos.
 - **Autoloading** especifica os requisitos para o correto funcionamento do *autoload*, o que norteia todo o funcionamento do *framework*.
-- **Guia de estilo** determina diversos padrões, do obrigatório ao desejável para a criação do código-fonte.
+- **Guia de estilo** determina diversos padrões, do obrigatório ao desejável, para a criação do código-fonte.
 
 A `PSR-1` define um pouco da formatação, que é estendida pela `PSR-12` e informações sobre *efeitos colaterais* das funções e métodos, além de padronizar a respeito de algumas estruturas do PHP. Foram poucas as oportunidades de aplicá-la no projeto, mas uma especial atenção foi dada à questão dos efeitos colaterais no model *Url*.
 
@@ -246,7 +246,7 @@ Vários testes estão disponíveis no diretório `tests` do projeto.
 As limitações conhecidas do projeto são:
 
 - Não é possível encurtar URLs que contenham *parâmetros query* (presentes após o sinal `?` na URL) ou *fragmentos* (presentes após o sinal `#` na URL).
-- Não é possível encurtar URLs cujo protocolo não sejam `http://` ou `https://`.
+- Não é possível encurtar URLs cujo protocolo não seja `http://` ou `https://`.
 
 
 ## Recursos
@@ -256,6 +256,7 @@ As limitações conhecidas do projeto são:
   - [Lumen](https://lumen.laravel.com/): *Microframework* PHP
   - [MySQL](https://www.mysql.com/): Sistema de gerenciamento de banco de dados
   - [PHP-CS-FIXER](https://github.com/FriendsOfPHP/PHP-CS-Fixer): Ferramenta de formatação de código para seguir as PSRs
+  - [PHP-FIG](https://www.php-fig.org/): Responsável pelas recomendações de padrões PHP (PSRs)
   - [PHPUnit](https://phpunit.de/): Framework de testes
   - [Postman](https://www.postman.com/): Aplicação auxiliar na depuração de APIs
   - [Thunder Client](https://www.thunderclient.io/): Extensão do Visual Studio Code com funcionalidades semelhantes ao Postman
@@ -265,4 +266,4 @@ As limitações conhecidas do projeto são:
 
 ## Créditos
 
-Esta implementação foi fortemente baseada no framework **Lumen** e a infraestrutura **Docker**, mas todo o conteúdo da camada de desenvolvimento é original.
+Esta implementação foi fortemente baseada no framework **Lumen** e na infraestrutura **Docker**, mas todo o conteúdo da camada de desenvolvimento é original.
