@@ -9,7 +9,7 @@ class UrlController extends Controller
 {
     public function create($url)
     {
-        $baseUrl = env('APP_URL') . '/';
+        $baseUrl = config('app.url') . '/';
 
         $res = Url::createSlug($url, $baseUrl);
         if ($res->getCode() == 200) {

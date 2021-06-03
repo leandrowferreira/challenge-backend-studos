@@ -40,7 +40,7 @@ class Url extends Model
         // If the "Allow Multiple" option is off, we need
         // to check if URL has an existing slug. If so,
         // return this slug and don't create a new one.
-        if (!env('URL_ALLOW_MULTIPLE')) {
+        if (!config('url.allow_multiple')) {
             $checkUrl = self::getSlugFromUrl($url);
 
             if ($checkUrl) {
@@ -51,7 +51,7 @@ class Url extends Model
         // If the "Check Before" option is on, we will
         // check if a call to the given URL will return
         // an error. If so, the result is HTTP "Unprocessable Entity"
-        if (env('URL_CHECK_BEFORE') && !self::isValidUrl($url)) {
+        if (config('url.check_before') && !self::isValidUrl($url)) {
             return new UrlResult(null, 422, 'URL to shorten is invalid');
         }
 
@@ -59,7 +59,7 @@ class Url extends Model
         $url = self::create([
             'slug'  => self::createNewSlug(),
             'url'   => $url,
-            'valid' => Carbon::now()->addDays(env('URL_VALID_DAYS'))
+            'valid' => Carbon::now()->addDays(config('url.valid_days'))
         ]);
 
         return new UrlResult($baseUrl . $url->slug);
@@ -86,9 +86,9 @@ class Url extends Model
 
         // If the "Renovate on Access" option is on, every access
         // refreshes the URL expiration time
-        if (env('RENOVATE_ON_ACCESS')) {
+        if (config('url.renovate_on_access')) {
             $instance->update([
-                'valid' => Carbon::now()->addDays(env('URL_VALID_DAYS'))
+                'valid' => Carbon::now()->addDays(config('url.valid_days'))
             ]);
         }
 
