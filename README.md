@@ -60,7 +60,7 @@ O procedimento descrito a seguir pressupõe o uso do ambiente **Linux** e a dist
 
 A instalação requer a presença do **Docker** e do **Docker Compose**. Caso não haja estes pré-requisitos, mais informações de como proceder com sua instalação podem ser obtidas [aqui](https://docs.docker.com/engine/install/) e [aqui](https://docs.docker.com/compose/install/).
 
-É fundamental ter o **git** instalado na máquina. No **Ubuntu** e em outras instalações, é possível instalá-lo com o seguinte comando:
+É importante ter o **git** instalado na máquina. No **Ubuntu** e em outras instalações, é possível instalá-lo com o seguinte comando:
 
 ```bash
 $ sudo apt install -y git
@@ -71,6 +71,9 @@ O primeiro passo é **clonar** o repositório com o projeto:
 ```bash
 $ git clone https://github.com/leandrowferreira/challenge-backend-studos
 ```
+
+> Caso não haja a possibilidade de usar o comando `git`, o repositório completo pode ser obtido [aqui](https://github.com/leandrowferreira/challenge-backend-studos/archive/refs/heads/main.zip), descompactado no computador local e o diretório principal renomeado para `challenge-backend-studos`.
+
 
 Agora, é necessário montar o ambiente de desenvolvimento baseador em **Docker**:
 
