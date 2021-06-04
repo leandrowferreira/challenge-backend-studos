@@ -197,7 +197,7 @@ Determina o número de dias em que a URL encurtada é válida a partir de sua cr
 
 Apesar de, como dito anteriormente, a aplicação não se tratar de uma API, uma documentação simplificada composta via Postman [está disponível aqui](https://documenter.getpostman.com/view/15870781/TzY4gaja).
 
-Além da documentação, uma *collection* do Postman está disponível em (https://www.getpostman.com/collections/52345b2ed4b016bb786a)[https://www.getpostman.com/collections/52345b2ed4b016bb786a].
+Além da documentação, uma *collection* do Postman está disponível em [https://www.getpostman.com/collections/52345b2ed4b016bb786a].
 
 ## Github Actions
 
