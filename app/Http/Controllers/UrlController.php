@@ -12,8 +12,8 @@ class UrlController extends Controller
         $baseUrl = config('app.url') . '/';
 
         $res = Url::createSlug($url, $baseUrl);
-        if ($res->getCode() == 200) {
-            return $res->getResult();
+        if (in_array($res->getCode(), ['200', '201']) !== false) {
+            return response($res->getResult(), $res->getCode());
         }
 
         return response($res->getMessage(), $res->getCode());

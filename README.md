@@ -152,9 +152,17 @@ Para gerar uma URL encurtada, é necessário enviar uma requisição `POST` para
 $ curl --location --request POST 'http://localhost:8080/laravel.com/api/8.x/Illuminate/Config/Repository.html'
 ```
 
+Esta chamada retorna uma URL encurtada completa, incluindo a base. Um exemplo da resposta seria `http://localhost:8080/abc123ab`.
+
+O código `HTTP` do retorno pode conter um dos seguintes valores:
+ - `201` (created) caso a URL esteja sendo encurtada pela primeira vez ou a opção `URL_ALLOW_MULTIPLE` esteja ativada
+ - `200` (OK) caso a URL já exista e a opção `URL_ALLOW_MULTIPLE` esteja desativada
+ - `422` (Unprocessable Entity) caso a opção `URL_CHECK_BEFORE` esteja ativada e a URL solicitada não seja válida
+
+ As opções citadas acima serão abordada em detalhes adiante.
+
 Outra forma de realizar chamadas post é usando o [**Postman**](https://www.postman.com/) ou, ainda, o [**Thunder Client**](https://www.thunderclient.io/), uma extensão do [**Visual Studio Code**](https://code.visualstudio.com/). Esta extensão é muito útil, pois mantém os testes de chamada no mesmo ambiente de desenvolvimento, caso este seja o Visual Studio Code.
 
-Esta chamada retorna uma URL encurtada completa, incluindo a base. Um exemplo da resposta seria `http://localhost:8080/abc123ab`.
 
 
 ### Acessando uma URL a partir da sua versão encurtada
@@ -237,7 +245,7 @@ O desenvolvimento desta aplicação foi realizado procurando se manter fiel às 
 
 A `PSR-1` define um pouco da formatação, que é estendida pela `PSR-12` e informações sobre *efeitos colaterais* das funções e métodos, além de padronizar a respeito de algumas estruturas do PHP. Foram poucas as oportunidades de aplicá-la no projeto, mas uma especial atenção foi dada à questão dos efeitos colaterais no model *Url*.
 
-A `PSR-4` é a base da organização das estruturas do **Lumen**, e é requerido pelo *framework* que o desenvolvedor a siga durante todo o desenvolvimento. Uma das grandes vantagens do uso de um *framework* é o direcionamento que ele dá ao comportamento do desenvolvedor, que passa a lidar com naturalidade ao seguir essa recomendação.
+A `PSR-4` é a base da organização das estruturas do **Lumen**, e é requerido pelo *framework* que o desenvolvedor a siga durante todo o desenvolvimento. Uma das grandes vantagens do uso de um *framework* é o direcionamento que ele dá ao comportamento do desenvolvedor, que passa a lidar com naturalidade ao seguir essa recomendação. No arquivo `composer.json` do projeto há mais detalhes sobre o mapeamento dos `namespaces` nas chaves `autoload` e `autoload-dev`.
 
 A `PSR-12` assegura que códigos gerados por diversas pessoas tenham o mínimo necessário de consistência entre si. *IDEs* como o **Visual Studio Code** e ferramentas como o [**PHP-CS-FIXER**](https://github.com/FriendsOfPHP/PHP-CS-Fixer) ajudam bastante no cumprimento das exigências desta recomendação.
 

@@ -69,7 +69,7 @@ class UrlCreationTest extends TestCase
         $url = 'some.invalid.url.' . random_int(0, 10000) . '.absurd';
         $this->post('/' . $url);
 
-        $this->assertResponseStatus(200);
+        $this->assertResponseStatus(201);
     }
 
     /**
@@ -108,11 +108,15 @@ class UrlCreationTest extends TestCase
         $slug  = explode('/', $this->post('/' . $url)->response->getContent());
         $slug1 = end($slug);
 
+        $this->assertResponseStatus(201);
+
         config(['url.allow_multiple' => 0]);
 
         //Get second slug
         $slug  = explode('/', $this->post('/' . $url)->response->getContent());
         $slug2 = end($slug);
+
+        $this->assertResponseStatus(200);
 
         $this->assertEquals($slug1, $slug2);
     }

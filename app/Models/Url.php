@@ -43,7 +43,7 @@ class Url extends Model
             $checkUrl = self::getSlugFromUrl($url);
 
             if ($checkUrl) {
-                return new UrlResult($baseUrl . $checkUrl->slug);
+                return new UrlResult($baseUrl . $checkUrl->slug, 200);
             }
         }
 
@@ -61,7 +61,7 @@ class Url extends Model
             'valid' => Carbon::now()->addDays(config('url.valid_days'))
         ]);
 
-        return new UrlResult($baseUrl . $url->slug);
+        return new UrlResult($baseUrl . $url->slug, 201);
     }
 
     /**
