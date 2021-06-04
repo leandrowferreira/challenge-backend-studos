@@ -21,6 +21,7 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [Framework](#framework)
     - [Banco de dados](#banco-de-dados)
     - [PHP Standard Recommendations (PSRs)](#php-standard-recommendations-psrs)
+    - [O Model `Url`](#o-model-url)
     - [Testes](#testes)
       - [testAppIsOn](#testappison)
       - [testReturnBasicUrlFromSlug](#testreturnbasicurlfromslug)
