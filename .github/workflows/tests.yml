@@ -1,0 +1,39 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [7.4]
+        lumen: [^8.2]
+
+    name: P${{ matrix.php }} - L${{ matrix.lumen }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, json, simplexml, intl, pcntl, fileinfo
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          cp .env.example .env
+          composer update --no-interaction --no-progress
+
+      - name: Tests
+        run: vendor/bin/phpunit
