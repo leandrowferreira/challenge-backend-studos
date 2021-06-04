@@ -16,6 +16,7 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [URL_ALLOW_MULTIPLE](#url_allow_multiple)
     - [RENOVATE_ON_ACCESS](#renovate_on_access)
     - [URL_VALID_DAYS](#url_valid_days)
+  - [Documentação do *entry point*](#documentação-do-entry-point)
   - [Detalhamento técnico](#detalhamento-técnico)
     - [Ambiente](#ambiente)
     - [Framework](#framework)
@@ -200,6 +201,13 @@ Se esta opção estiver ativa (com valor `1`), a cada vez que a URL encurtada fo
 ### URL_VALID_DAYS
 
 Determina o número de dias em que a URL encurtada é válida a partir de sua criação. Aṕos expirado o prazo, na tentativa de um acesso à URL encurtada, o usuário receberá a mensagem `Not found`, acompanhado do código `HTTP` `404`.
+
+## Documentação do *entry point*
+
+Apesar de, como dito anteriormente, a aplicação não se tratar de uma API, uma documentação simplificada composta via Postman [está disponível aqui](https://documenter.getpostman.com/view/15870781/TzY4gaja).
+
+Além da documentação, uma *collection* do Postman está disponível em (https://www.getpostman.com/collections/52345b2ed4b016bb786a)[https://www.getpostman.com/collections/52345b2ed4b016bb786a].
+
 
 ## Detalhamento técnico
 
