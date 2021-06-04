@@ -19,7 +19,6 @@ jobs:
           - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD:toor
-          MYSQL_ALLOW_EMPTY_PASSWORD: no
           MYSQL_USER: root
           MYSQL_PASSWORD: toor
           MYSQL_DATABASE: studoslug
