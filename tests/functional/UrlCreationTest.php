@@ -36,6 +36,8 @@ class UrlCreationTest extends TestCase
     {
         $this->get('/abc123ab');
 
+        $this->assertResponseStatus(302);
+        $this->assertStringContainsString('http-equiv="refresh"', $this->response->getContent());
         $this->assertStringContainsString('http://studos.com.br', $this->response->getContent());
     }
 
@@ -52,6 +54,7 @@ class UrlCreationTest extends TestCase
 
         $this->get('/' . $data->slug);
 
+        $this->assertResponseStatus(302);
         $this->assertStringContainsString('http-equiv="refresh"', $this->response->getContent());
         $this->assertStringContainsString($data->url, $this->response->getContent());
     }
