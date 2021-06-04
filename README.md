@@ -17,6 +17,7 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [RENOVATE_ON_ACCESS](#renovate_on_access)
     - [URL_VALID_DAYS](#url_valid_days)
   - [Documentação do *entry point*](#documentação-do-entry-point)
+  - [Github Actions](*github-actions)
   - [Detalhamento técnico](#detalhamento-técnico)
     - [Ambiente](#ambiente)
     - [Framework](#framework)
@@ -24,16 +25,6 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [PHP Standard Recommendations (PSRs)](#php-standard-recommendations-psrs)
     - [O Model `Url`](#o-model-url)
     - [Testes](#testes)
-      - [testAppIsOn](#testappison)
-      - [testReturnBasicUrlFromSlug](#testreturnbasicurlfromslug)
-      - [testReturnNewUrlFromSlug](#testreturnnewurlfromslug)
-      - [testCreateNewSlug](#testcreatenewslug)
-      - [testDontCreateNewSlug](#testdontcreatenewslug)
-      - [testReturnSameSlug](#testreturnsameslug)
-      - [testReturnDifferentSlug](#testreturndifferentslug)
-      - [testNotChangingExpiration](#testnotchangingexpiration)
-      - [testChangingExpiration](#testchangingexpiration)
-      - [testExpiredSlug](#testexpiredslug)
   - [Limitações](#limitações)
   - [Recursos](#recursos)
   - [Créditos](#créditos)
@@ -207,6 +198,14 @@ Determina o número de dias em que a URL encurtada é válida a partir de sua cr
 Apesar de, como dito anteriormente, a aplicação não se tratar de uma API, uma documentação simplificada composta via Postman [está disponível aqui](https://documenter.getpostman.com/view/15870781/TzY4gaja).
 
 Além da documentação, uma *collection* do Postman está disponível em (https://www.getpostman.com/collections/52345b2ed4b016bb786a)[https://www.getpostman.com/collections/52345b2ed4b016bb786a].
+
+## Github Actions
+
+O (Github Actions)[https://github.com/features/actions] permite automatizar várias tarefas, desde a execução do teste até integração e deploy contínuos. É possível, por exemplo, enviar a aplicação por FTP ou SFTP quando publicada no *branch production*.
+
+Não faz parte da especificação do projeto o *deply* da aplicação em algum ambiente "vivo" (como (Heroku)[https://www.heroku.com/] ou (AWS)[https://aws.amazon.com/pt/]). Então, como exemplo de *Action*, foi incluída uma ação simples, que realiza os testes a cada *push*.
+
+Mais detalhes sobre essa ação podem ser obtidos (aqui)[https://github.com/leandrowferreira/challenge-backend-studos/actions] ou no próprio (arquivo da *action*)[https://github.com/leandrowferreira/challenge-backend-studos/blob/main/.github/workflows/laravel.yml].
 
 
 ## Detalhamento técnico
