@@ -17,7 +17,7 @@ Implementação de serviço de encurtar URL como aplicação de candidato a vaga
     - [RENOVATE_ON_ACCESS](#renovate_on_access)
     - [URL_VALID_DAYS](#url_valid_days)
   - [Documentação do *entry point*](#documentação-do-entry-point)
-  - [Github Actions](*github-actions)
+  - [Github Actions](#github-actions)
   - [Detalhamento técnico](#detalhamento-técnico)
     - [Ambiente](#ambiente)
     - [Framework](#framework)
